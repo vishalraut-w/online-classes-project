@@ -13,7 +13,7 @@ type PaymentHistoryItem = {
     title: string;
     subject: string | null;
     price: number | null;
-  } | null;
+  }[];
 };
 
 export default function StudentPaymentsPage() {
@@ -25,7 +25,10 @@ export default function StudentPaymentsPage() {
     const fetchPayments = async () => {
       try {
         setLoading(true);
-        const { data: { user } } = await supabase.auth.getUser();
+
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
 
         if (!user) {
           setErrorMsg("Please log in to view your purchase history.");
@@ -33,7 +36,6 @@ export default function StudentPaymentsPage() {
           return;
         }
 
-        // Fetch using your exact schema column names (payment_id, order_id)
         const { data, error } = await supabase
           .from("enrollments")
           .select(`
@@ -55,7 +57,7 @@ export default function StudentPaymentsPage() {
           console.error("Error fetching enrollments:", error.message);
           setErrorMsg("Failed to load purchase history.");
         } else {
-          setPayments(data || []);
+          setPayments((data ?? []) as PaymentHistoryItem[]);
         }
       } catch (err) {
         console.error("Unexpected error:", err);
@@ -87,7 +89,9 @@ export default function StudentPaymentsPage() {
       <div className="flex min-h-screen items-center justify-center bg-slate-50 text-slate-700 font-medium">
         <div className="flex flex-col items-center gap-3">
           <div className="h-10 w-10 animate-spin rounded-full border-4 border-orange-500 border-t-transparent" />
-          <p className="text-sm font-semibold text-slate-600">Loading your purchase history...</p>
+          <p className="text-sm font-semibold text-slate-600">
+            Loading your purchase history...
+          </p>
         </div>
       </div>
     );
@@ -96,13 +100,19 @@ export default function StudentPaymentsPage() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans p-4 sm:p-8">
       <div className="mx-auto max-w-5xl space-y-6">
-        
+
         {/* HEADER */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl bg-white p-6 border border-slate-200 shadow-sm">
           <div>
-            <span className="text-xs font-bold text-orange-600 uppercase tracking-wider">Billing & Orders</span>
-            <h1 className="text-xl sm:text-2xl font-black text-slate-900 mt-1">Purchase History</h1>
+            <span className="text-xs font-bold text-orange-600 uppercase tracking-wider">
+              Billing & Orders
+            </span>
+
+            <h1 className="text-xl sm:text-2xl font-black text-slate-900 mt-1">
+              Purchase History
+            </h1>
           </div>
+
           <div className="rounded-xl bg-orange-50 px-4 py-2.5 border border-orange-100 text-xs font-bold text-orange-700">
             Total Orders: {payments.length}
           </div>
@@ -121,8 +131,14 @@ export default function StudentPaymentsPage() {
               <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-2xl text-slate-400">
                 📄
               </div>
-              <h3 className="text-base font-bold text-slate-900">No purchases found</h3>
-              <p className="text-xs text-slate-500 mt-1">You haven&apos;t enrolled in any courses yet.</p>
+
+              <h3 className="text-base font-bold text-slate-900">
+                No purchases found
+              </h3>
+
+              <p className="text-xs text-slate-500 mt-1">
+                You haven&apos;t enrolled in any courses yet.
+              </p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -136,33 +152,51 @@ export default function StudentPaymentsPage() {
                     <th className="p-4">Date</th>
                   </tr>
                 </thead>
+
                 <tbody className="divide-y divide-slate-100 text-slate-700">
                   {payments.map((item) => {
-                    const displayAmount = item.amount ?? item.courses?.price ?? 0;
-                    const hasTransaction = Boolean(item.payment_id || item.order_id);
+                    const course = item.courses?.[0];
+
+                    const displayAmount =
+                      item.amount ?? course?.price ?? 0;
 
                     return (
-                      <tr key={item.id} className="hover:bg-slate-50/50 transition">
+                      <tr
+                        key={item.id}
+                        className="hover:bg-slate-50/50 transition"
+                      >
                         <td className="p-4">
-                          <p className="font-bold text-slate-900">{item.courses?.title || "Course Enrollment"}</p>
-                          {item.courses?.subject && (
+                          <p className="font-bold text-slate-900">
+                            {course?.title || "Course Enrollment"}
+                          </p>
+
+                          {course?.subject && (
                             <span className="inline-block mt-0.5 rounded bg-orange-50 px-1.5 py-0.5 text-[10px] font-bold text-orange-600 uppercase border border-orange-200">
-                              {item.courses.subject}
+                              {course.subject}
                             </span>
                           )}
                         </td>
+
                         <td className="p-4 font-black text-slate-900">
-                          ₹{displayAmount} <span className="text-[10px] text-slate-400 uppercase font-medium">INR</span>
+                          ₹{displayAmount}{" "}
+                          <span className="text-[10px] text-slate-400 uppercase font-medium">
+                            INR
+                          </span>
                         </td>
+
                         <td className="p-4">
                           <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                             Success
                           </span>
                         </td>
+
                         <td className="p-4 font-mono text-[11px] text-slate-500">
-                          {item.payment_id || item.order_id || "Direct Access"}
+                          {item.payment_id ||
+                            item.order_id ||
+                            "Direct Access"}
                         </td>
+
                         <td className="p-4 text-slate-500 font-medium whitespace-nowrap">
                           {formatDate(item.created_at)}
                         </td>
