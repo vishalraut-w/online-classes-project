@@ -93,7 +93,7 @@ function CheckoutContent() {
 
       if (!user) {
         alert("Please log in to continue.");
-        router.push("/login");
+        router.push("/");
         return;
       }
 
