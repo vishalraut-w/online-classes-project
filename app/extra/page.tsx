@@ -11,6 +11,7 @@ import {
   GraduationCap,
   Heart,
   Home as HomeIcon,
+  LucideIcon,
   Mail,
   MapPin,
   Menu,
@@ -36,8 +37,8 @@ const devanagari = Noto_Sans_Devanagari({
   variable: "--font-devanagari",
   display: "swap",
 });
-
-const aboutDetails = [
+type DetailItem = [string, string, LucideIcon];
+const aboutDetails: DetailItem[] = [
   ["Name", "Vishal Raut", User],
   ["Education", "B.Sc. Mathematics", GraduationCap],
   ["Profession", "Teacher", Briefcase],
@@ -55,7 +56,22 @@ const skills = [
   "Git & GitHub",
 ];
 
-const biodataPersonal = [
+const personalDetails: DetailItem[] = [
+  ["Date of Birth", "25/05/1999", Calendar],
+  ["Birth Place", "Talkhed", MapPin],
+  ["Height", "5 ft / 5 in (170 cm)", User],
+  ["Blood Group", "B Positive", CheckCircle2],
+];
+
+const biodataTraditional: DetailItem[] = [
+  ["कुलदैवत", "तुळजाभवानी", Sparkles],
+  ["गोत्र", "अगस्त्य", Sparkles],
+  ["नक्षत्र", "हस्त", Sparkles],
+  ["राशी", "कुंभ", Sparkles],
+  ["नाडी", "आध", Sparkles],
+  ["गण", "देव", Sparkles],
+];
+const biodataPersonal: DetailItem[] = [
   ["नाव", "चि. विशाल परमेश्वर राऊत", User],
   ["जन्म तारीख", "25/05/1999", Calendar],
   ["जन्म वेळ", "1:15", Clock],
@@ -66,27 +82,16 @@ const biodataPersonal = [
   ["उंची", "5 फूट / 5 इंच (170 सेमी)", User],
   ["रक्तगट", "बी पॉझिटिव्ह", Heart],
 ];
-
-const biodataTraditional = [
-  ["कुलदैवत", "तुळजाभवानी", Sparkles],
-  ["गोत्र", "अगस्त्य", Sparkles],
-  ["नक्षत्र", "हस्त", Sparkles],
-  ["राशी", "कुंभ", Sparkles],
-  ["नाडी", "आध", Sparkles],
-  ["गण", "देव", Sparkles],
-];
-
-const biodataFamily = [
+const biodataFamily: DetailItem[] = [
   ["शिक्षण", "BSc Math (fullstack Devloper)", GraduationCap],
   ["नोकरी", "शिक्षक", Briefcase],
   ["उत्पन्न", "₹17,000", Briefcase],
   ["वडिलांचे नाव", "परमेश्वर नारायण राऊत", User],
   ["वडिलांचा व्यवसाय", "शेती", Briefcase],
   ["आईचे नाव", "सौ. सुनीता परमेश्वर राऊत", User],
-  ["भाऊ", "चि. ज्ञानेश्वर परमेश्वर राऊत (MSF)", User],
+  ["भाऊ", "चि. गणेश परमेश्वर राऊत (MSF)", User],
   ["बहीण", "सौ. रुपाली भागवत चौधरी (English School Teacher)", User],
 ];
-
 const relatives =
   "गोरे, इंगळे, चौधरी, कदम, गोबरे, लेंडाळ, कोरडे, भूंबे, घोलप, शिंदे, वादे, बाबडे.";
 
